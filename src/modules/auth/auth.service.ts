@@ -33,7 +33,6 @@ export class AuthService {
 
   private async validateUser(authUserDto: AuthUserDto) {
     const user = await this.userService.findUser(authUserDto.login);
-
     if (!user)
       throw new UnauthorizedException({
         message: `Такого пользователя не существует`,
