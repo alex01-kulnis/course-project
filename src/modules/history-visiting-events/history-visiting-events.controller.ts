@@ -18,8 +18,7 @@ export class HistoryVisitingEventsController {
   }
 
   @Get('statistics')
-  @UseGuards(JwtAuthGuard)
-  getStatistics(@Request() req: any) {
+  getStatistics() {
     return this.historyVisitingEventsService.getStatistics();
   }
 }
