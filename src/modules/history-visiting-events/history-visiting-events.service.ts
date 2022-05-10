@@ -70,7 +70,7 @@ export class HistoryVisitingEventsService {
   async getAllHistory() {
     let event: any;
     await this.dbContext
-      .query('select * from historyvisiting')
+      .query('SELECT * from get_all_history()')
       .then((result) => {
         event = plainToInstance(HistoryVisitingEvent, result.rows);
       })
