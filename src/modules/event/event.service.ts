@@ -104,10 +104,7 @@ export class EventService {
   async findEvent(name_event: string) {
     let event: EventModel;
     await this.dbContext
-      .query(
-        'select id_event, id_creator, id_user, name_event, place_event, data_and_time_event, max_participants_event from events where name_event = $1',
-        [name_event],
-      )
+      .query('select * from get_find_event_by_name($1)', [name_event])
       .then((result) => {
         event = plainToInstance(EventModel, result.rows[0]);
       })
@@ -120,9 +117,7 @@ export class EventService {
   async findAllEvents() {
     let events;
     await this.dbContext
-      .query(
-        'select id_event, id_user, id_creator, name_event, place_event, data_and_time_event, max_participants_event from events  ',
-      )
+      .query('SELECT * from get_events()')
       .then((result) => {
         events = plainToInstance(EventModel, result.rows);
       })
@@ -135,10 +130,9 @@ export class EventService {
   async findEventForSearching(searchEventDto: SearchEventDto) {
     let event: any;
     await this.dbContext
-      .query(
-        "select id_event, id_user, id_creator, name_event, place_event, data_and_time_event, max_participants_event from events where name_event like '%'||$1||'%' ",
-        [searchEventDto.name_event],
-      )
+      .query('select * from get_find_event_by_name($1) ', [
+        searchEventDto.name_event,
+      ])
       .then((result) => {
         event = plainToInstance(EventModel, result.rows);
       })
@@ -151,7 +145,7 @@ export class EventService {
   async countOfParticipants(id_event: number) {
     let event: EventModel[];
     await this.dbContext
-      .query('select * from historyvisiting where id_event = $1 ', [id_event])
+      .query('select * from get_count_of_participants($1) ', [id_event])
       .then((result) => {
         event = plainToInstance(EventModel, result.rows);
       })
@@ -167,7 +161,7 @@ export class EventService {
     let countOfHistory: HistoryVisitingEvent[];
     await this.dbContext
       .query(
-        'select * from confirmVisiting where id_user = $1 and  id_event = $2',
+        'select * from get_already_participating_in_confirmvisiting($1,$2)',
         [userId, event_id],
       )
       .then((countOfConfirmEvents) => {
@@ -182,7 +176,7 @@ export class EventService {
 
     await this.dbContext
       .query(
-        'select * from historyvisiting where id_user = $1 and  id_event = $2',
+        'select * from get_already_participating_in_historyvisiting($1,$2)',
         [userId, event_id],
       )
       .then((result) => {

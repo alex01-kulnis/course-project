@@ -15,10 +15,7 @@ export class HistoryVisitingEventsService {
   async findAllHistoryEvents(user_id: number) {
     let event: any;
     await this.dbContext
-      .query(
-        'select id_event, id_creator, id_user, name_event, place_event, data_and_time_event, max_participants_event from historyvisiting where id_user = $1',
-        [user_id],
-      )
+      .query('select * from get_history_event($1)', [user_id])
       .then((result) => {
         event = plainToInstance(HistoryVisitingEvent, result.rows);
       })
@@ -70,12 +67,23 @@ export class HistoryVisitingEventsService {
     return 'event удалён';
   }
 
+  async getAllHistory() {
+    let event: any;
+    await this.dbContext
+      .query('select * from historyvisiting')
+      .then((result) => {
+        event = plainToInstance(HistoryVisitingEvent, result.rows);
+      })
+      .catch((err) => {
+        throw new InternalServerErrorException(err);
+      });
+    return event;
+  }
+
   async getStatistics() {
     let events: any;
     await this.dbContext
-      .query(
-        'select id_event, name_event, count(*) AS amount from historyvisiting GROUP BY id_event, name_event ORDER BY id_event ASC',
-      )
+      .query('SELECT * from get_statistics_for_graph();')
       .then((result) => {
         events = plainToInstance(StatisticEvent, result.rows);
       })

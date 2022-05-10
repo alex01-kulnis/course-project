@@ -46,7 +46,7 @@ export class ConfirmVisitingEventsService {
   async getConfirmEvents(userId: number) {
     let confirmEvents;
     await this.dbContext
-      .query('select * from confirmVisiting where id_creator = $1', [userId])
+      .query('select * from get_confirim_event($1)', [userId])
       .then((result) => {
         confirmEvents = plainToInstance(ConfirmVisitingEvent, result.rows);
       })

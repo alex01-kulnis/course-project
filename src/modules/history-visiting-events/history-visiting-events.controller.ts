@@ -17,6 +17,11 @@ export class HistoryVisitingEventsController {
     );
   }
 
+  @Get('all-history')
+  getAllHistory() {
+    return this.historyVisitingEventsService.getAllHistory();
+  }
+
   @Get('statistics')
   getStatistics() {
     return this.historyVisitingEventsService.getStatistics();

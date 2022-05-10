@@ -15,10 +15,7 @@ export class UserService {
   async findUser(login: string) {
     let user: UserModel;
     await this.dbContext
-      .query(
-        'select id_user, firstname, secondname, login, password from users where login = $1',
-        [login],
-      )
+      .query('SELECT * from get_user_by_login($1)', [login])
       .then((result) => {
         user = plainToInstance(UserModel, result.rows[0]);
       })
